@@ -1,21 +1,63 @@
 package consensus
-
-// uses config mmodule
+import (
+	"errors"
+	"github.com/BlocSoc-iitr/selene/config"
+	"os"
+	"path/filepath"
+)
 type Database interface {
-	new()
-	save_checkpoint()
-	load_checkpoint()
+	New(config *config.Config) (Database, error)
+	SaveCheckpoint(checkpoint []byte) error
+	LoadCheckpoint() ([]byte, error)
 }
-
-// NOTE: parameters are not included
-type FileDB struct{ Database }
-
-func (f FileDB) new() FileDB             {}
-func (f FileDB) save_checkpoint() FileDB {}
-func (f FileDB) load_checkpoint() FileDB {}
-
-type ConfigDB struct{ Database }
-
-func (cdb ConfigDB) new() ConfigDB             {}
-func (cdb ConfigDB) save_checkpoint() ConfigDB {}
-func (cdb ConfigDB) load_checkpoint() ConfigDB {}
+type FileDB struct {
+	DataDir           string
+	defaultCheckpoint []byte
+}
+func (f *FileDB) New(config *config.Config) (Database, error) {
+	if config.DataDir == "" {
+		return nil, errors.New("data dir not in config")
+	}
+	return &FileDB{
+		dataDir:           config.DataDir,
+		defaultCheckpoint: config.DefaultCheckpoint,
+	}, nil
+}
+func (f *FileDB) SaveCheckpoint(checkpoint []byte) error {
+	err := os.MkdirAll(f.DataDir, os.ModePerm)
+	if err != nil {
+		return err
+	}
+	return os.WriteFile(filepath.Join(f.DataDir, "checkpoint"), checkpoint, 0644)
+}
+func (f *FileDB) LoadCheckpoint() ([]byte, error) {
+	data, err := os.ReadFile(filepath.Join(f.DataDir, "checkpoint"))
+	if err != nil {
+		if os.IsNotExist(err) {
+			return f.defaultCheckpoint, nil
+		}
+		return nil, err
+	}
+	if len(data) == 32 {
+		return data, nil
+	}
+	return f.defaultCheckpoint, nil
+}
+type ConfigDB struct {
+	checkpoint []byte
+}
+func (c *ConfigDB) New(config *config.Config) (Database, error) {
+	checkpoint := config.Checkpoint
+	if checkpoint == nil {
+		checkpoint = config.DefaultCheckpoint
+	}
+	return &ConfigDB{
+		checkpoint: checkpoint,
+	}, nil
+}
+func (c *ConfigDB) SaveCheckpoint(checkpoint []byte) error {
+	return nil
+}
+func (c *ConfigDB) LoadCheckpoint() ([]byte, error) {
+	return c.checkpoint, nil
+}

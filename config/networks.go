@@ -49,7 +49,7 @@ func (n Network) chainID(s string) (uint64, error) {
 		return 0, errors.New("network not recognized")
 	}
 }
-func dataDir(network Network) (string, error) {
+func DataDir(network Network) (string, error) {
     homeDir, err := os.UserHomeDir()
     if err != nil {
         return "", fmt.Errorf("failed to get user home directory: %w", err)
@@ -67,7 +67,7 @@ func Mainnet() (BaseConfig, error) {
 		return BaseConfig{}, fmt.Errorf("failed to parse genesis root: %w", err)
 	}
 	consensusRPC := "https://www.lightclientdata.org"
-	dataDir := dataDir(MAINNET)
+	dataDir := DataDir(MAINNET)
 	return BaseConfig{
 		DefaultCheckpoint: defaultCheckpoint,
 		RpcPort:           8545,
@@ -107,7 +107,7 @@ func Goerli() (BaseConfig, error) {
 	if err != nil {
 		return BaseConfig{}, fmt.Errorf("failed to parse genesis root: %w", err)
 	}
-	dataDir := dataDir(GOERLI)
+	dataDir := DataDir(GOERLI)
 	return BaseConfig{
 		DefaultCheckpoint: defaultCheckpoint,
 		RpcPort:           8545,
@@ -147,7 +147,7 @@ func Sepolia() (BaseConfig, error) {
 	if err != nil {
 		return BaseConfig{}, fmt.Errorf("failed to parse genesis root: %w", err)
 	}
-	dataDir := dataDir(SEPOLIA)
+	dataDir := DataDir(SEPOLIA)
 	return BaseConfig{
 		DefaultCheckpoint: defaultCheckpoint,
 		RpcPort:           8545,
