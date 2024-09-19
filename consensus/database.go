@@ -6,21 +6,21 @@ import (
 	"path/filepath"
 )
 type Database interface {
-	New(cfg *config.BaseConfig) (Database, error)
+	New(cfg *config.Config) (Database, error)
 	SaveCheckpoint(checkpoint []byte) error
 	LoadCheckpoint() ([]byte, error)
 }
 type FileDB struct {
 	DataDir           string
-	defaultCheckpoint [32]byte
+	DefaultCheckpoint [32]byte
 }
-func (f *FileDB) New(cfg *config.BaseConfig) (Database, error) {
+func (f *FileDB) New(cfg *config.Config) (Database, error) {
 	if cfg.DataDir == nil || *cfg.DataDir == "" {
 		return nil, errors.New("data directory is not set in the config")
 	}
 	return &FileDB{
 		DataDir:           *cfg.DataDir,
-		defaultCheckpoint: cfg.DefaultCheckpoint,
+		DefaultCheckpoint: cfg.DefaultCheckpoint,
 	}, nil
 }
 func (f *FileDB) SaveCheckpoint(checkpoint []byte) error {
@@ -34,19 +34,19 @@ func (f *FileDB) LoadCheckpoint() ([]byte, error) {
 	data, err := os.ReadFile(filepath.Join(f.DataDir, "checkpoint"))
 	if err != nil {
 		if os.IsNotExist(err) {
-			return f.defaultCheckpoint[:], nil
+			return f.DefaultCheckpoint[:], nil
 		}
 		return nil, err
 	}
 	if len(data) == 32 {
 		return data, nil
 	}
-	return f.defaultCheckpoint[:], nil
+	return f.DefaultCheckpoint[:], nil
 }
 type ConfigDB struct {
 	checkpoint [32]byte
 }
-func (c *ConfigDB) New(cfg *config.BaseConfig) (Database, error) {
+func (c *ConfigDB) New(cfg *config.Config) (Database, error) {
 	checkpoint := cfg.DefaultCheckpoint
 	if cfg.DataDir == nil {
 		return nil, errors.New("data directory is not set in the config")
