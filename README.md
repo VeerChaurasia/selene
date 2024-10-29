@@ -6,6 +6,13 @@
 Selene is a fast, open source, portable & secure light client for Ethereum written in Golang. We plan to ship Selene as the underlying software behind wallets that use light clients. We derived our inspiration from [Helios](https://github.com/a16z/helios) which is a light client written in Rust. The project is in active maintenance on the [dev](https://github.com/BlocSoc-iitr/selene/tree/dev) branch. 
 
 # Architecture
+## High Level Overview
+The image attached below is a simple demonstration of what Selene is and how it works at a high level: 
+
+![High Level Overview](https://github.com/user-attachments/assets/948541ef-5407-4035-a49d-e0d23711aadc)
+## Architecture
+Below is the complete architecture of how a light client like Selene works under the hood:
+
 ![Selene Architecture](https://github.com/user-attachments/assets/db7eb9d7-5bc3-4911-a849-1b2d05239942)
 ## Data Flow
 
@@ -53,6 +60,16 @@ In progress.
 
 # Warning
 Selene is still experimental software. We hope to ship v0.1 by November 2024.
+
+# Current Team behind Selene
+[Vasu Khanna](https://github.com/star-gazer111) ( Chief Innovator ) <br>
+[Sambhav Jain](https://github.com/DarkLord017) <br>
+[Veer Chaurasia](https://github.com/VeerChaurasia)<br>
+[Nilav Prajapati](https://github.com/gerceboss)<br>
+[Utsav Sharma](https://github.com/x-senpai-x)<br>
+[Shourya Choudhary](https://github.com/18aaddy)<br>
+[Abdullah Azeem](https://github.com/ABD-AZE)<br>
+
 
 # Contributing
 We openly welcome contributions to selene from the broader ethereum community. For details, refer [CONTRIBUTION GUIDELINES](https://github.com/BlocSoc-iitr/selene/blob/dev/CONTRIBUTING.md).
