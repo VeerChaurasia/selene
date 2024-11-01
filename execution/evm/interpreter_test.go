@@ -1,8 +1,11 @@
 package evm
 
 import (
-	"testing"
+	"encoding/json"
 	"math/big"
+	"reflect"
+	"testing"
+
 	"github.com/stretchr/testify/assert"
 )
 
@@ -36,7 +39,6 @@ func TestStack(t *testing.T) {
 	assert.Equal(t, 1, len(stack.Data), "Expected stack length 1 after pop")
 	assert.Equal(t, item1, stack.Data[0], "Unexpected stack item after pop")
 }
-
 
 func TestFunctionStack(t *testing.T) {
 	fs := FunctionStack{}
@@ -167,4 +169,144 @@ func TestGasRefundAndLimit(t *testing.T) {
 
 	// Check that remaining gas never exceeds limit
 	assert.LessOrEqual(t, gas.Remaining, gas.Limit, "Gas Remaining exceeds limit")
+}
+
+
+
+// Test case structure for FunctionStack
+type FunctionStackTestCase struct {
+	name     string
+	input    string // Input as hexadecimal string
+	expected FunctionStack
+	hasError bool
+}
+
+func TestFunctionStackMarshalJSON(t *testing.T) {
+	testCases := []FunctionStackTestCase{
+		{
+			name: "Valid FunctionStack",
+			input: `{"return_stack":[{"idx":"0x0","pc":"0x1"},{"idx":"0x2","pc":"0x3"}],"current_code_idx":"0x4"}`,
+			expected: FunctionStack{
+				ReturnStack: []FunctionReturnFrame{
+					{Idx: 0, PC: 1},
+					{Idx: 2, PC: 3},
+				},
+				CurrentCodeIdx: 4,
+			},
+			hasError: false,
+		},
+	}
+
+	for _, tc := range testCases {
+		t.Run(tc.name, func(t *testing.T) {
+			var fs FunctionStack
+			data := []byte(tc.input)
+
+			err := json.Unmarshal(data, &fs)
+			if (err != nil) != tc.hasError {
+				t.Errorf("expected error: %v, got: %v", tc.hasError, err)
+			}
+			if !tc.hasError && !reflect.DeepEqual(fs, tc.expected) {
+				t.Errorf("expected: %+v, got: %+v", tc.expected, fs)
+			}
+		})
+	}
+}
+
+func TestFunctionStackUnmarshalJSON(t *testing.T) {
+	testCases := []FunctionStackTestCase{
+		{
+			name: "Valid JSON",
+			input: `{"return_stack":[{"idx":"0x0","pc":"0x1"},{"idx":"0x2","pc":"0x3"}],"current_code_idx":"0x4"}`,
+			expected: FunctionStack{
+				ReturnStack: []FunctionReturnFrame{
+					{Idx: 0, PC: 1},
+					{Idx: 2, PC: 3},
+				},
+				CurrentCodeIdx: 4,
+			},
+			hasError: false,
+		},
+	}
+
+	for _, tc := range testCases {
+		t.Run(tc.name, func(t *testing.T) {
+			var fs FunctionStack
+			data := []byte(tc.input)
+
+			err := json.Unmarshal(data, &fs)
+			if (err != nil) != tc.hasError {
+				t.Errorf("expected error: %v, got: %v", tc.hasError, err)
+			}
+			if !tc.hasError && !reflect.DeepEqual(fs, tc.expected) {
+				t.Errorf("expected: %+v, got: %+v", tc.expected, fs)
+			}
+		})
+	}
+}
+
+// Test case structure for FunctionReturnFrame
+type FunctionReturnFrameTestCase struct {
+	name     string
+	input    string // Input as hexadecimal string
+	expected FunctionReturnFrame
+	hasError bool
+}
+
+func TestFunctionReturnFrameMarshalJSON(t *testing.T) {
+	testCases := []FunctionReturnFrameTestCase{
+		{
+			name: "Valid FunctionReturnFrame",
+			input: `{"idx":"0x0","pc":"0x1"}`,
+			expected: FunctionReturnFrame{
+				Idx: 0,
+				PC:  1,
+			},
+			hasError: false,
+		},
+	}
+
+	for _, tc := range testCases {
+		t.Run(tc.name, func(t *testing.T) {
+			var frf FunctionReturnFrame
+			data := []byte(tc.input)
+
+			err := json.Unmarshal(data, &frf)
+			if (err != nil) != tc.hasError {
+				t.Errorf("expected error: %v, got: %v", tc.hasError, err)
+			}
+			if !tc.hasError && !reflect.DeepEqual(frf, tc.expected) {
+				t.Errorf("expected: %+v, got: %+v", tc.expected, frf)
+			}
+		})
+	}
+}
+
+func TestFunctionReturnFrameUnmarshalJSON(t *testing.T) {
+	testCases := []FunctionReturnFrameTestCase{
+		{
+			name: "Valid JSON",
+			input: `{"idx":"0x0","pc":"0x1"}`,
+			expected: FunctionReturnFrame{
+				Idx: 0,
+				PC:  1,
+			},
+			hasError: false,
+		},
+	}
+
+	for _, tc := range testCases {
+		t.Run(tc.name, func(t *testing.T) {
+			var frf FunctionReturnFrame
+			data := []byte(tc.input)
+
+			err := json.Unmarshal(data, &frf)
+			if (err != nil) != tc.hasError {
+				t.Errorf("expected error: %v, got: %v", tc.hasError, err)
+			}
+			if !tc.hasError && !reflect.DeepEqual(frf, tc.expected) {
+				t.Errorf("expected: %+v, got: %+v", tc.expected, frf)
+			}
+		})
+	}
 }
