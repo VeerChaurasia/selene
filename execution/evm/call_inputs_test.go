@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"math/big"
 	"reflect"
-	"fmt"
 	"testing"
 )
 
@@ -31,7 +30,7 @@ func TestCallInputsJSON(t *testing.T) {
 				"is_static": false,
 				"is_eof": false
 			}`,
-			
+
 			expected: CallInputs{
 				Input:              hexToBytes("0x1234"),
 				ReturnMemoryOffset: Range{Start: 0, End: 32},
@@ -41,7 +40,7 @@ func TestCallInputsJSON(t *testing.T) {
 				Caller:             Address{Addr: parseHexAddress("0x9876543210fedcba9876543210fedcba98765432")},
 				Value: CallValue{
 					ValueType: "transfer",
-					Amount: parseU256("0xde0b6b3a7640000"),
+					Amount:    parseU256("0xde0b6b3a7640000"),
 				},
 				Scheme:   ICall,
 				IsStatic: false,
@@ -58,8 +57,6 @@ func TestCallInputsJSON(t *testing.T) {
 			expected: CallInputs{},
 			hasError: true,
 		},
-
-		
 	}
 
 	for _, tc := range testCases {
@@ -77,10 +74,9 @@ func TestCallInputsJSON(t *testing.T) {
 				}
 			}
 		})
-		
+
 	}
 }
-
 
 type TestCase2 struct {
 	name     string
@@ -99,7 +95,7 @@ func TestCallValueJSON(t *testing.T) {
 			}`,
 			expected: CallValue{
 				ValueType: "transfer",
-				Amount: parseU256("0xde0b6b3a7640000"),
+				Amount:    parseU256("0xde0b6b3a7640000"),
 			},
 			hasError: false,
 		},
@@ -111,11 +107,10 @@ func TestCallValueJSON(t *testing.T) {
 			}`,
 			expected: CallValue{
 				ValueType: "apparent",
-				Amount:  parseU256("0x6f05b59d3b20000"),
+				Amount:    parseU256("0x6f05b59d3b20000"),
 			},
 			hasError: false,
 		},
-		
 	}
 
 	for _, tc := range testCases {
@@ -163,7 +158,7 @@ func TestCreateInputsJSON(t *testing.T) {
 					SchemeType: SchemeTypeCreate,
 					Salt:       parsePtrU256("0x1234567890abcdef1234567890abcdef12345678"),
 				},
-				Value: parseU256("0xde0b6b3a7640000"),
+				Value:    parseU256("0xde0b6b3a7640000"),
 				InitCode: hexToBytes("0x010203"),
 				GasLimit: 100000,
 			},
@@ -276,26 +271,13 @@ func TestCreateSchemeJSON(t *testing.T) {
 // 	return addr
 // }
 
-func parseUint64(hexStr string) (uint64, error) {
-    value, ok := new(big.Int).SetString(hexStr[2:], 16)
-    if !ok {
-        return 0, fmt.Errorf("invalid hex string: %s", hexStr)
-    }
-    return value.Uint64(), nil
-}
-
 func parseU256(hexStr string) U256 {
-    value, ok := new(big.Int).SetString(hexStr[2:], 16)
-    if !ok {
+	value, ok := new(big.Int).SetString(hexStr[2:], 16)
+	if !ok {
 		return U256(new(big.Int)) // Return a zero value or another default
-    }
-    return U256(value)
+	}
+	return U256(value)
 }
-
-
-
-
-
 func parsePtrU256(hexStr string) *U256 {
 	value, _ := new(big.Int).SetString(hexStr[2:], 16)
 	u256 := U256(value)
@@ -328,8 +310,6 @@ func compareCreateInputs(a, b *CreateInputs) bool {
 		reflect.DeepEqual(a.InitCode, b.InitCode) &&
 		a.GasLimit == b.GasLimit
 }
-
-
 
 // Comparison function for CreateSchemes
 func compareCreateSchemes(a, b *CreateScheme) bool {

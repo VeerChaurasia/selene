@@ -121,7 +121,6 @@ func TestOpcodeUnmarshalJSON(t *testing.T) {
 	}
 }
 
-// Helper function to convert hex string to byte slice
 func hexToBytes(hexStr string) []byte {
 	bytes, err := hex.DecodeString(hexStr[2:])
 	if err != nil {
@@ -129,16 +128,12 @@ func hexToBytes(hexStr string) []byte {
 	}
 	return bytes
 }
-
-// Helper function to parse hex address string to Address struct
 func parseHexAddress(hexStr string) [20]byte {
 	var addr [20]byte
 	bytes, _ := hex.DecodeString(hexStr[2:])
 	copy(addr[:], bytes)
 	return addr
 }
-
-// Comparison function for Opcode struct
 func compareOpcodes(a, b Opcode) bool {
 	return compareEof(a.InitCode, b.InitCode) && a.CreatedAddress == b.CreatedAddress && reflect.DeepEqual(a.Input, b.Input)
 }
@@ -148,7 +143,6 @@ func compareEof(a, b Eof) bool {
 		reflect.DeepEqual(a.Raw, b.Raw)
 }
 
-// Comparison function for EofHeader struct
 func compareEofHeader(a, b EofHeader) bool {
 	return a.TypesSize == b.TypesSize &&
 		reflect.DeepEqual(a.CodeSizes, b.CodeSizes) &&

@@ -70,11 +70,11 @@ type LegacyAnalyzedBytecode struct {
 // JumpTable equivalent in Go, using a sync.Once pointer to simulate Arc and BitVec<u8>.
 type JumpTable struct {
 	BitVector *Bitvector // Simulating BitVec<u8> as []byte
-	once      sync.Once  // Lazy initialization if needed
+	Once      sync.Once  // Lazy initialization if needed
 }
 type Bitvector struct {
-	bits []uint8
-	size int // Total number of bits represented
+	Bits []uint8
+	Size int // Total number of bits represented
 }
 type Opcode struct {
 	InitCode       Eof     `json:"initcode"`
