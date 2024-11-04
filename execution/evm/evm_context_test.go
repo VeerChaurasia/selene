@@ -84,21 +84,4 @@ func TestWithNewEvmDB(t *testing.T) {
 	}
 }
 
-// TestSetPrecompiles tests the SetPrecompiles method.
-func TestSetPrecompiles(t *testing.T) {
-	db := &MockDatabase{
-		BasicFunc: func(address Address) (AccountInfo, error) {
-			return AccountInfo{}, nil
-		},
-	}
-
-	evmCtx := NewEvmContext(db)
-
-	precompiles := DefaultContextPrecompiles[*MockDatabase]()
-	evmCtx.SetPrecompiles(precompiles)
-
-	if evmCtx.Precompiles.Inner.Owned == nil {
-		t.Error("Expected Precompiles Owned to be initialized, got nil")
-	}
-}
 

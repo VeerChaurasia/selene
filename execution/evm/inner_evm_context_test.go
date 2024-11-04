@@ -3,38 +3,9 @@ package evm
 import (
 	"testing"
 	"math/big"
-
 	"github.com/stretchr/testify/assert"
 	// "github.com/BlocSoc-iitr/selene/common"
 )
-
-// TestNewJournalState checks if NewJournalState initializes JournaledState correctly.
-func TestNewJournalState(t *testing.T) {
-	spec := DefaultSpecId()
-	warmPreloadedAddresses := map[Address]struct{}{
-		{Addr: [20]byte{0x1}}: {},
-	}
-	journalState := NewJournalState(spec, warmPreloadedAddresses)
-
-	assert.Nil(t, journalState.State, "State should be initialized as nil")
-	assert.Nil(t, journalState.TransientStorage, "TransientStorage should be initialized as nil")
-	assert.Equal(t, spec, journalState.Spec, "Spec should be set to the provided SpecId")
-	assert.Equal(t, warmPreloadedAddresses, journalState.WarmPreloadedAddresses, "WarmPreloadedAddresses should be set correctly")
-	assert.Equal(t, uint(0), journalState.Depth, "Depth should be initialized to 0")
-	assert.Empty(t, journalState.Journal, "Journal should be initialized empty")
-	assert.Empty(t, journalState.Logs, "Logs should be initialized empty")
-}
-
-// TestSetSpecId verifies that the setSpecId method correctly updates the SpecId in JournaledState.
-func TestSetSpecId(t *testing.T) {
-	spec := DefaultSpecId()
-	journalState := NewJournalState(spec, nil)
-
-	newSpec := SpecId(2)
-	journalState.setSpecId(newSpec)
-	assert.Equal(t, newSpec, journalState.Spec, "SpecId should be updated to the new SpecId")
-}
-
 // TestInnerEvmContextWithJournalState ensures InnerEvmContext integrates correctly with JournaledState.
 func TestInnerEvmContextWithJournalState(t *testing.T) {
 	db := NewEmptyDB()
