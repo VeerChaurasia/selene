@@ -36,18 +36,23 @@ func (m *MockRpc) GetBootstrap(block_root [32]byte) (consensus_core.Bootstrap, e
 func (m *MockRpc) GetUpdates(period uint64, count uint8) ([]consensus_core.Update, error) {
 	path := filepath.Join(m.testdata, "updates.json")
 	res, err := os.ReadFile(path)
+
 	if err != nil {
 		return nil, fmt.Errorf("failed to read file: %w", err)
 	}
 	var updatesResponse UpdateResponse
+
 	err = json.Unmarshal(res, &updatesResponse)
 	if err != nil {
 		return nil, fmt.Errorf("updates error: %w", err)
 	}
-	updates := make([]consensus_core.Update, len(updatesResponse))
+
+	var updates = make([]consensus_core.Update, len(updatesResponse))
 	for i, update := range updatesResponse {
 		updates[i] = update.Data
 	}
+
+	//fmt.Print("Data", updates)
 	return updates, nil
 }
 func (m *MockRpc) GetFinalityUpdate() (consensus_core.FinalityUpdate, error) {
