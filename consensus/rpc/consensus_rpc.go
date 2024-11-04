@@ -2,6 +2,7 @@ package rpc
 
 import (
 	"github.com/BlocSoc-iitr/selene/consensus/consensus_core"
+	"github.com/BlocSoc-iitr/selene/utils"
 )
 
 // return types not mention and oarameters as well
@@ -14,6 +15,12 @@ type ConsensusRpc interface {
 	ChainId() (uint64, error)
 }
 
+
 func NewConsensusRpc(rpc string) ConsensusRpc {
-	return NewNimbusRpc(rpc)
+	if utils.IsURL(rpc) {
+		return NewNimbusRpc(rpc)
+	} else {
+		return NewMockRpc(rpc)
+	}
+
 }
