@@ -12,7 +12,6 @@ require (
 	github.com/protolambda/bls12-381-util v0.1.0
 	github.com/spf13/viper v1.19.0
 	github.com/stretchr/testify v1.9.0
-	github.com/ugorji/go/codec v1.2.12
 	github.com/wealdtech/go-merkletree v1.0.0
 	golang.org/x/crypto v0.22.0
 	gopkg.in/yaml.v2 v2.4.0
