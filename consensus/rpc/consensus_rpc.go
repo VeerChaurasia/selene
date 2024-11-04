@@ -15,6 +15,7 @@ type ConsensusRpc interface {
 	ChainId() (uint64, error)
 }
 
+
 func NewConsensusRpc(rpc string) ConsensusRpc {
 	if utils.IsURL(rpc) {
 		return NewNimbusRpc(rpc)
