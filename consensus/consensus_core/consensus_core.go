@@ -1,11 +1,17 @@
 package consensus_core
 
-type Transaction = [1073741824]byte
+import (
+	"bytes"
+
+	"github.com/ugorji/go/codec"
+)
+
 type Bytes32 [32]byte
 type BLSPubKey [48]byte
 type Address [20]byte
 type LogsBloom [256]byte
 type SignatureBytes [96]byte
+type Transaction = [1073741824]byte //1073741824
 
 type BeaconBlock struct {
 	Slot          uint64          `json:"slot"`
@@ -106,23 +112,23 @@ type Withdrawal struct {
 }
 
 type ExecutionPayload struct {
-	ParentHash    Bytes32       `json:"parent_hash"`
-	FeeRecipient  Address       `json:"fee_recipient"`
-	StateRoot     Bytes32       `json:"state_root"`
-	ReceiptsRoot  Bytes32       `json:"receipts_root"`
-	LogsBloom     LogsBloom     `json:"logs_bloom"`
-	PrevRandao    Bytes32       `json:"prev_randao"`
-	BlockNumber   uint64        `json:"block_number"`
-	GasLimit      uint64        `json:"gas_limit"`
-	GasUsed       uint64        `json:"gas_used"`
-	Timestamp     uint64        `json:"timestamp"`
-	ExtraData     []byte        `json:"extra_data"`
-	BaseFeePerGas uint64        `json:"base_fee_per_gas"`
-	BlockHash     Bytes32       `json:"block_hash"`
-	Transactions  []Transaction `json:"transactions"`
-	Withdrawals   *[]Withdrawal `json:"withdrawals"`     //Only capella and deneb
-	BlobGasUsed   *uint64       `json:"blob_gas_used"`   // Only deneb
-	ExcessBlobGas *uint64       `json:"excess_blob_gas"` // Only deneb
+	ParentHash    Bytes32
+	FeeRecipient  Address
+	StateRoot     Bytes32
+	ReceiptsRoot  Bytes32
+	LogsBloom     LogsBloom
+	PrevRandao    Bytes32
+	BlockNumber   uint64
+	GasLimit      uint64
+	GasUsed       uint64
+	Timestamp     uint64
+	ExtraData     [32]byte
+	BaseFeePerGas uint64
+	BlockHash     Bytes32
+	Transactions  []Transaction `ssz-max:"1048576"`
+	Withdrawals   []Withdrawal  `ssz-max:"16"`
+	BlobGasUsed   *uint64       // Deneb-specific field, use pointer for optionality
+	ExcessBlobGas *uint64       // Deneb-specific field, use pointer for optionality
 }
 
 type SignedBlsToExecutionChange struct {

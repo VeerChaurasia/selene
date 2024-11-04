@@ -8,6 +8,16 @@ import (
 	"testing"
 )
 
+<<<<<<< HEAD
+=======
+func TestNewMockRpc(t *testing.T) {
+	path := "/tmp/testdata"
+	mockRpc := NewMockRpc(path)
+	if mockRpc.testdata != path {
+		t.Errorf("Expected testdata path to be %s, got %s", path, mockRpc.testdata)
+	}
+}
+>>>>>>> 8c9adab233a285540ae026d334a2740131590c79
 func TestGetBootstrap(t *testing.T) {
 	tempDir, err := os.MkdirTemp("", "mock_rpc_test")
 	if err != nil {
